@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ismail Siriene</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg:       #1a1208;
+  --bg2:      #211608;
+  --card:     rgba(255,200,100,0.05);
+  --border:   rgba(210,160,60,0.15);
+  --border-h: rgba(210,160,60,0.45);
+  --text:     #f5ead8;
+  --muted:    rgba(235,210,170,0.45);
+  --accent:   #d4933a;
+  --accent2:  #e8b96a;
+  --gold:     #c8853a;
+  --warm:     rgba(212,147,58,0.12);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg) url('my-background.jpg') center/cover fixed no-repeat;
+  color: var(--text);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── INTRO ── */
+#intro {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  animation: introGone 0s 2.1s forwards;
+}
+@keyframes introGone { to { opacity:0; pointer-events:none; visibility:hidden; } }
+
+.intro-curtain {
+  position: absolute; inset: 0;
+  background: #0e0b04;
+  transform-origin: bottom;
+  animation: curtainUp 1.3s cubic-bezier(0.77,0,0.18,1) 0.5s forwards;
+}
+@keyframes curtainUp { to { transform: scaleY(0); } }
+
+.intro-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 9vw, 4.5rem);
+  font-weight: 300;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #f0ddb0;
+  position: relative; z-index: 1;
+  animation: introFade 0.5s ease 1.6s forwards;
+}
+@keyframes introFade { to { opacity: 0; } }
+
+/* ── WARM AMBIENT BACKGROUND ── */
+.ambient {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden;
+  background: radial-gradient(ellipse at center, rgba(26,18,8,0.55) 0%, rgba(26,18,8,0.75) 100%);
+}
+.amb {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px);
+  animation: ambFloat linear infinite alternate;
+}
+.amb1 { width:80vw; height:60vh; top:-20vh; left:-15vw; background:radial-gradient(ellipse, rgba(180,110,20,0.22) 0%, transparent 70%); animation-duration:22s; }
+.amb2 { width:60vw; height:55vh; top:-10vh; right:-10vw; background:radial-gradient(ellipse, rgba(140,80,10,0.18) 0%, transparent 70%); animation-duration:26s; animation-delay:-10s; }
+.amb3 { width:55vw; height:45vh; bottom:0; left:5vw;  background:radial-gradient(ellipse, rgba(100,60,10,0.15) 0%, transparent 70%); animation-duration:30s; animation-delay:-18s; }
+.amb4 { width:45vw; height:40vh; bottom:-10vh; right:5vw; background:radial-gradient(ellipse, rgba(160,90,20,0.12) 0%, transparent 70%); animation-duration:20s; animation-delay:-7s; }
+@keyframes ambFloat {
+  from { transform: translate(0,0) scale(1) rotate(0deg); }
+  to   { transform: translate(3vw,4vh) scale(1.07) rotate(5deg); }
+}
+
+/* Warm dust particles */
+.dust {
+  position: fixed; inset: 0; z-index: 1;
+  background-image:
+    radial-gradient(1px 1px at 12% 20%, rgba(220,170,80,0.5)  0%, transparent 100%),
+    radial-gradient(1px 1px at 68% 7%,  rgba(220,170,80,0.4)  0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 38% 55%, rgba(220,170,80,0.55) 0%, transparent 100%),
+    radial-gradient(1px 1px at 82% 38%, rgba(220,170,80,0.4)  0%, transparent 100%),
+    radial-gradient(1px 1px at 22% 75%, rgba(220,170,80,0.3)  0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 13%, rgba(220,170,80,0.45) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 65%, rgba(220,170,80,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 48% 44%, rgba(220,170,80,0.5)  0%, transparent 100%),
+    radial-gradient(1px 1px at 4%  50%, rgba(220,170,80,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 82%, rgba(220,170,80,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 33%, rgba(220,170,80,0.4)  0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 18%, rgba(220,170,80,0.4)  0%, transparent 100%);
+}
+
+/* ── PAGE ── */
+.page {
+  position: relative; z-index: 2;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 22px 80px;
+}
+
+/* ── HEADER ── */
+.header {
+  text-align: center;
+  padding: 80px 0 52px;
+  opacity: 0;
+  animation: rise 1s cubic-bezier(0.16,1,0.3,1) 2.0s forwards;
+}
+
+.avatar-wrap { position: relative; display: inline-block; margin-bottom: 28px; }
+.avatar {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212,147,58,0.18), rgba(180,110,20,0.08));
+  border: 1px solid rgba(212,147,58,0.4);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 60px rgba(200,133,58,0.2), inset 0 0 30px rgba(200,133,58,0.06);
+}
+.ag {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(212,147,58,0.15);
+  animation: pulse 3.5s ease-in-out infinite;
+}
+.ag1 { inset: -12px; }
+.ag2 { inset: -24px; border-color: rgba(212,147,58,0.07); animation-delay: 1.2s; }
+@keyframes pulse {
+  0%,100% { opacity:.4; transform:scale(1); }You know what I 
+  50%      { opacity:1;  transform:scale(1.04); }
+}
+.avatar-letters {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 300;
+  color: var(--accent2); letter-spacing: 4px;
+}
+
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem,7vw,3.2rem);
+  font-weight: 300; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text);
+  line-height: 1; margin-bottom: 14px;
+  text-shadow: 0 3px 15px rgba(0,0,0,0.6);
+}
+h1 em { font-style: italic; color: var(--accent2); }
+
+.tagline {
+  font-size: .78rem; color: #f5ead8;
+  letter-spacing: .2em; text-transform: uppercase;
+  font-weight: 400; line-height: 1.7;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+}
+
+/* ── DIVIDER ── */
+.divider {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 36px;
+  opacity: 0; animation: rise .8s ease 2.15s forwards;
+}
+.divider span { flex:1; height:1px; background: linear-gradient(90deg, transparent, rgba(212,147,58,.3), transparent); }
+.divider i { width:4px; height:4px; border-radius:50%; background:var(--accent); opacity:.7; display:block; }
+
+/* ── SECTION LABEL ── */
+.sec {
+  font-size: .62rem; letter-spacing: .26em; text-transform: uppercase;
+  color: #e8b96a; margin-bottom: 14px; padding-left: 2px;
+  font-weight: 500;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  opacity: 0; animation: rise .7s ease forwards;
+}
+
+/* ── LINKS ── */
+.links { display: flex; flex-direction: column; gap: 9px; }
+
+.link {
+  display: flex; align-items: center; gap: 16px;
+  padding: 15px 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-decoration: none; color: var(--text);
+  position: relative; overflow: hidden;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  transition: border-color .3s, transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+  opacity: 0; animation: rise .7s cubic-bezier(.16,1,.3,1) forwards;
+}
+.link::before {
+  content:''; position:absolute; left:0; top:18%; bottom:18%; width:2.5px;
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  border-radius:0 3px 3px 0; opacity:0;
+  transition: opacity .3s, top .3s, bottom .3s;
+}
+.link::after {
+  content:''; position:absolute; inset:0; border-radius:14px;
+  background: linear-gradient(120deg, rgba(212,147,58,.07), rgba(232,185,106,.03));
+  opacity:0; transition: opacity .3s;
+}
+.link:hover { border-color: var(--border-h); transform: translateX(5px); box-shadow: -4px 0 24px rgba(200,133,58,.15), 0 4px 30px rgba(0,0,0,.4); }
+.link:hover::before { opacity:1; top:12%; bottom:12%; }
+.link:hover::after  { opacity:1; }
+.link:active { transform: translateX(2px) scale(.99); }
+
+/* ── ICON CONTAINERS ── */
+.ico {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; position: relative; z-index: 1;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+  background: linear-gradient(135deg, rgba(212,147,58,0.15), rgba(180,110,20,0.08));
+  border: 1px solid rgba(212,147,58,0.22);
+  box-shadow: 0 2px 10px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,220,120,.08);
+}
+.link:hover .ico {
+  transform: scale(1.1) rotate(-3deg);
+  box-shadow: 0 4px 18px rgba(200,133,58,.25), inset 0 1px 0 rgba(255,220,120,.12);
+  border-color: rgba(212,147,58,0.45);
+  background: linear-gradient(135deg, rgba(212,147,58,0.22), rgba(180,110,20,0.14));
+}
+.ico svg { width: 18px; height: 18px; }
+
+/* Brand-colored icon backgrounds on hover */
+.ico-ig    { --ico-brand: rgba(131,58,180,0.25); --ico-border: rgba(200,100,80,0.4); }
+.ico-x     { --ico-brand: rgba(20,20,20,0.4);   --ico-border: rgba(150,150,150,0.4); }
+.ico-fb    { --ico-brand: rgba(24,119,242,0.2);  --ico-border: rgba(24,119,242,0.4); }
+.ico-yt    { --ico-brand: rgba(255,0,0,0.2);     --ico-border: rgba(255,0,0,0.4); }
+.ico-li    { --ico-brand: rgba(0,119,181,0.2);   --ico-border: rgba(0,119,181,0.4); }
+.ico-pin   { --ico-brand: rgba(230,0,35,0.2);    --ico-border: rgba(230,0,35,0.4); }
+.ico-snap  { --ico-brand: rgba(255,252,0,0.15);  --ico-border: rgba(255,252,0,0.35); }
+.ico-tg    { --ico-brand: rgba(0,136,204,0.2);   --ico-border: rgba(0,136,204,0.4); }
+.ico-wa    { --ico-brand: rgba(37,211,102,0.2);  --ico-border: rgba(37,211,102,0.4); }
+.ico-mail  { --ico-brand: rgba(212,147,58,0.2);  --ico-border: rgba(212,147,58,0.4); }
+.ico-phone { --ico-brand: rgba(212,147,58,0.2);  --ico-border: rgba(212,147,58,0.4); }
+
+.link:hover .ico-ig,
+.link:hover .ico-x,
+.link:hover .ico-fb,
+.link:hover .ico-yt,
+.link:hover .ico-li,
+.link:hover .ico-pin,
+.link:hover .ico-snap,
+.link:hover .ico-tg,
+.link:hover .ico-wa,
+.link:hover .ico-mail,
+.link:hover .ico-phone {
+  background: var(--ico-brand);
+  border-color: var(--ico-border);
+  box-shadow: 0 4px 18px var(--ico-brand), inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.lt { flex:1; position:relative; z-index:1; min-width:0; }
+.ln { font-size:.88rem; font-weight:400; letter-spacing:.03em; color: var(--text); text-shadow: 0 1px 6px rgba(0,0,0,0.4); }
+.ls { font-size:.73rem; color:#d4c5a9; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow: 0 1px 5px rgba(0,0,0,0.4); }
+
+.arrow {
+  color: rgba(212,147,58,0.35);
+  position:relative; z-index:1; flex-shrink:0;
+  transition: color .3s, transform .3s;
+}
+.link:hover .arrow { color: var(--accent2); transform: translateX(4px); }
+
+/* ── SECTION GAP ── */
+.gap { margin-top: 32px; }
+
+/* ── FEATURED CARDS ── */
+.feat-row {
+  display: flex; gap: 12px;
+  overflow-x: auto; padding-bottom: 10px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  opacity:0; animation: rise .8s ease forwards;
+}
+.feat-row::-webkit-scrollbar { height: 3px; }
+.feat-row::-webkit-scrollbar-track { background: transparent; }
+.feat-row::-webkit-scrollbar-thumb { background: rgba(212,147,58,.25); border-radius:10px; }
+
+.fcard {
+  flex-shrink: 0; width: 155px;
+  scroll-snap-align: start;
+  text-decoration: none; color: var(--text);
+  border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--card);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), border-color .3s, box-shadow .3s;
+}
+.fcard:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--border-h);
+  box-shadow: 0 16px 40px rgba(0,0,0,.5), 0 0 24px rgba(212,147,58,.1);
+}
+
+.fthumb {
+  width:100%; height:108px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.fthumb svg { width:26px; height:26px; position:relative; z-index:1; opacity:.85; }
+
+.fplay {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(0,0,0,.3);
+  opacity:0; transition: opacity .3s;
+}
+.fcard:hover .fplay { opacity:1; }
+.fplay svg { width:34px; height:34px; filter:drop-shadow(0 2px 10px rgba(0,0,0,.7)); }
+
+.fbody { padding: 10px 12px 12px; }
+.fplat {
+  font-size:.59rem; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:4px;
+  display:flex; align-items:center; gap:5px;
+}
+.fdot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.ftitle { font-size:.8rem; font-weight:400; line-height:1.35; color: var(--text); }
+.fsub   { font-size:.68rem; color:var(--muted); margin-top:3px; font-style:italic; }
+
+/* ── FOOTER ── */
+footer {
+  text-align:center; margin-top:56px;
+  font-size:.65rem; letter-spacing:.16em; text-transform:uppercase;
+  color:rgba(235,210,170,.45);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+  opacity:0; animation: rise .8s ease 3.2s forwards;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes rise {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.rpl {
+  position:absolute; border-radius:50%;
+  background: rgba(212,147,58,.13);
+  transform:scale(0);
+  animation: rplA .65s ease-out;
+  pointer-events:none; z-index:0;
+}
+@keyframes rplA { to { transform:scale(5); opacity:0; } }
+
+/* ── STAGGER DELAYS ── */
+.s-social  { animation-delay: 2.25s; }
+.s-contact { animation-delay: 2.25s; }
+.s-feat    { animation-delay: 3.0s; }
+
+#soc .link:nth-child(1){ animation-delay:2.30s; }
+#soc .link:nth-child(2){ animation-delay:2.37s; }
+#soc .link:nth-child(3){ animation-delay:2.44s; }
+#soc .link:nth-child(4){ animation-delay:2.51s; }
+#soc .link:nth-child(5){ animation-delay:2.58s; }
+#soc .link:nth-child(6){ animation-delay:2.65s; }
+#soc .link:nth-child(7){ animation-delay:2.72s; }
+
+#con .link:nth-child(1){ animation-delay:2.79s; }
+#con .link:nth-child(2){ animation-delay:2.86s; }
+#con .link:nth-child(3){ animation-delay:2.93s; }
+#con .link:nth-child(4){ animation-delay:3.00s; }
+
+.feat-row { animation-delay: 3.07s; }
+
+@media (max-width:420px) {
+  h1 { font-size:2rem; }
+  .link { padding:13px 15px; }
+  .fcard { width:142px; }
+}
+
+/* ──── SLINGSHOT SVG ──── */
+#slingshot-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1499;
+}
+
+/* ── INSPIRATIONAL BALL ── */
+#inspo-ball {
+  position: fixed;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #e8b96a 0%, #d4933a 80%);
+  box-shadow: 0 0 20px rgba(232,185,106,0.8), 0 0 5px rgba(232,185,106,0.5);
+  transition: top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+  z-index: 1500;
+}
+</style>
+</head>
+<body>
+
+<!-- ── INTRO ── -->
+<div id="intro">
+  <div class="intro-curtain"></div>
+  <div class="intro-text">Ismail Siriene</div>
+</div>
+
+<!-- ── WARM AMBIENT BG ── -->
+<div class="ambient">
+  <div class="amb amb1"></div>
+  <div class="amb amb2"></div>
+  <div class="amb amb3"></div>
+  <div class="amb amb4"></div>
+</div>
+<div class="dust"></div>
+
+<!-- ── PAGE ── -->
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="avatar-wrap">
+      <div class="avatar">
+        <div class="ag ag1"></div>
+        <div class="ag ag2"></div>
+        <span class="avatar-letters">IS</span>
+      </div>
+    </div>
+    <h1>Ismail <em>Siriene</em></h1>
+    <p class="tagline">Follow me · Chat on Telegram<br>or call if you need me</p>
+  </header>
+
+  <!-- Divider -->
+  <div class="divider"><span></span><i></i><span></span></div>
+
+  <!-- ── Social Media ── -->
+  <p class="sec s-social">Social Media</p>
+  <div class="links" id="soc">
+
+    <!-- Instagram -->
+    <a class="link" href="https://instagram.com/ismail_siriene" target="_blank" rel="noopener">
+      <div class="ico ico-ig">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5.5"/>
+          <circle cx="12" cy="12" r="4.2"/>
+          <circle cx="17.4" cy="6.6" r="1" fill="var(--accent2)" stroke="none"/>
+        </svg>
+      </div>
+      <div class="lt"><div class="ln">Instagram</div><div class="ls">@ismail_siriene</div></div>
+      <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <!-- X -->
+    <a class="link" href="https://x.com/ismail_siriene" target="_blank" rel="noopener">
+      <div class="ico ico-x">
+        <svg viewBox="0 0 24 24" fill="var(--accent2)">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </div>
+      <div class="lt"><div class="ln">X (Twitter)</div><div class="ls">@ismail_siriene</div></div>
+      <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <!-- Facebook -->
+    <a class="link" href="https://www.facebook.com/share/18S2ewoAtF/" target="_blank" rel="noopener">
+      <div class="ico ico-fb">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+        </svg>
+      </div>
+      <div class="lt"><div class="ln">Facebook</div><div class="ls">ismail.siriene</div></div>
+      <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <!-- YouTube -->
+    <a class="link" href="https://www.youtube.com/@Ismail.Siriene" target="_blank" rel="noopener">
+      <div class="ico ico-yt">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+          <polygon points="9.75,15.02 15.5,12 9.75,8.98" fill="var(--accent2)" stroke="none"/>
+        </svg>
+      </div>
+      <div class="lt"><div class="ln">YouTube</div><div class="ls">@Ismail.Siriene</div></div>
+      <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <!-- LinkedIn -->
+    <a class="link" href="https://www.linkedin.com/in/ismail-siriene" target="_blank" rel="noopener">
+      <div class="ico ico-li">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+          <rect x="2" y="9" width="4" height="12"/>
+          <circle cx="4" cy="4" r="2"/>
+        </svg>
+      </div>
+      <div class="lt"><div class="ln">LinkedIn</div><div class="ls">ismail-siriene</div></div>
+      <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <!-- Pinterest -->
+    <a class="link" href="https://pinterest.com/ismail.siriene" target="_blank" rel="noopener">
+      <div class="ico ico-pin">
+        <svg viewBox="0 0 24 24" fill="var(--accent2)">
+          <path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.428 1.808-2.428.853 0 1.267.641 1.267 1.408 0 .858-.546 2.141-.828 3.33-.236.995.499 1.806 1.476 1.806 1.772 0 3.135-1.869 3.135-4.566 0-2.386-1.715-4.054-4.163-4.054-2.835 0-4.498 2.126-4.498 4.324 0 .856.33 1.775.741 2.277a.3.3 0 0 1 .069.284c-.076.313-.243.995-.276 1.134-.044.183-.145.222-.334.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.967-.527-2.292-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+        </svg>
+      </div>
+      <div class="lt"><div class="ln">Pinterest</div><div class="ls">ismail.siriene</div></div>
+      <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <!-- Snapchat -->
+    <a class="link" href="https://www.snapchat.com/add/ismail.nabee7" target="_blank" rel="noopener">
+      <div class="ico ico-snap">
+        <svg viewBox="0 0 24 24" fill="var(--accent2)">
+          <path d="M12.166 2c1.411.006 5.57.44 5.57 5.147v.594c0 .19.031.405.048.617.094.044.21.069.346.069.282 0 .61-.11.905-.303.13-.085.275-.13.413-.13.274 0 .501.15.596.393.14.366-.044.684-.55.94a3.2 3.2 0 0 1-.458.179c-.46.15-1.094.357-1.238.878-.05.182-.014.378.108.578 1.082 1.783 2.364 2.276 3.21 2.47.262.06.437.295.437.565 0 .546-.635.96-1.892 1.232-.109.023-.183.118-.215.247-.072.286-.255.48-.484.48-.077 0-.159-.017-.25-.052a3.65 3.65 0 0 0-1.307-.242c-.264 0-.518.038-.718.107-.447.155-.755.495-1.18.906-.606.579-1.363 1.3-2.637 1.3-1.274 0-2.031-.72-2.637-1.3-.425-.41-.733-.75-1.18-.906-.2-.069-.454-.107-.718-.107-.487 0-.978.108-1.307.242-.091.035-.173.052-.25.052-.228 0-.412-.194-.484-.48-.032-.129-.106-.224-.215-.247-1.257-.272-1.892-.686-1.892-1.232 0-.27.175-.505.437-.565.846-.194 2.128-.687 3.21-2.47.122-.2.158-.396.108-.578-.144-.521-.778-.728-1.238-.878a3.195 3.195 0 0 1-.458-.18c-.506-.255-.69-.573-.55-.939.095-.242.322-.393.596-.393.138 0 .283.045.413.13.295.193.623.303.905.303.131 0 .245-.023.341-.065.02-.215.053-.432.053-.625V7.147C6.264 2.44 10.755 2 12.166 2"/>
+        </svg>
+      </div>
+      <div class="lt"><div class="ln">Snapchat</div><div class="ls">ismail.nabee7</div></div>
+      <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+  </div>
+
+  <!-- ── Contact ── -->
+  <div class="gap">
+    <p class="sec s-contact">Contact</p>
+    <div class="links" id="con">
+
+      <!-- Telegram -->
+      <a class="link" href="https://t.me/ismail_siriene" target="_blank" rel="noopener">
+        <div class="ico ico-tg">
+          <svg viewBox="0 0 24 24" fill="var(--accent2)">
+            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+          </svg>
+        </div>
+        <div class="lt"><div class="ln">Telegram</div><div class="ls">@ismail_siriene</div></div>
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <!-- WhatsApp -->
+      <a class="link" href="https://api.whatsapp.com/send?phone=9647815950869" target="_blank" rel="noopener">
+        <div class="ico ico-wa">
+          <svg viewBox="0 0 24 24" fill="var(--accent2)">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+          </svg>
+        </div>
+        <div class="lt"><div class="ln">WhatsApp</div><div class="ls">+964 781 595 0869</div></div>
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <!-- Email -->
+      <a class="link" href="mailto:ismail.siriene@gmail.com">
+        <div class="ico ico-mail">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="3"/>
+            <path d="M2 7l10 7 10-7"/>
+          </svg>
+        </div>
+        <div class="lt"><div class="ln">Email</div><div class="ls">ismail.siriene@gmail.com</div></div>
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <!-- Phone -->
+      <a class="link" href="tel:+9647815950869">
+        <div class="ico ico-phone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.29 6.29l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <div class="lt"><div class="ln">Phone</div><div class="ls">+964 781 595 0869</div></div>
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── Featured ── -->
+  <div class="gap">
+    <p class="sec s-feat">Featured</p>
+    <div class="feat-row">
+
+      <!-- Telegram: 2024 -->
+      <a class="fcard" href="https://t.me/ismail_siriene/s/5" target="_blank" rel="noopener">
+        <div class="fthumb" style="background:linear-gradient(135deg,rgba(0,100,180,.45),rgba(0,60,130,.5));">
+          <svg viewBox="0 0 24 24" fill="rgba(160,210,255,.9)"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          <div class="fplay"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="fbody">
+          <div class="fplat"><div class="fdot" style="background:#4ab3f4"></div>Telegram</div>
+          <div class="ftitle">2024</div>
+          <div class="fsub">Story</div>
+        </div>
+      </a>
+
+      <!-- Barsirin Reel -->
+      <a class="fcard" href="https://www.instagram.com/reel/DDuW23nI1kh/" target="_blank" rel="noopener">
+        <div class="fthumb" style="background:linear-gradient(135deg,rgba(131,58,180,.5),rgba(253,29,29,.3),rgba(252,176,69,.2));">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,210,140,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="rgba(255,210,140,.9)" stroke="none"/></svg>
+          <div class="fplay"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="fbody">
+          <div class="fplat"><div class="fdot" style="background:#c13584"></div>Instagram</div>
+          <div class="ftitle">Barsirin</div>
+          <div class="fsub">Reel</div>
+        </div>
+      </a>
+
+      <!-- Adele - Skyfall (YouTube) -->
+      <a class="fcard" href="https://www.youtube.com/watch?v=DeumyOzKqgI" target="_blank" rel="noopener">
+        <div class="fthumb" style="background:linear-gradient(135deg,rgba(180,10,10,.5),rgba(100,5,5,.5));">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,180,160,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98" fill="rgba(255,180,160,.9)" stroke="none"/></svg>
+          <div class="fplay"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="fbody">
+          <div class="fplat"><div class="fdot" style="background:#ff0000"></div>YouTube</div>
+          <div class="ftitle">Adele — Skyfall</div>
+          <div class="fsub">Official Video</div>
+        </div>
+      </a>
+
+      <!-- Barsirin Reel 2 -->
+      <a class="fcard" href="https://www.instagram.com/reel/C6oIX5ZMJsd/" target="_blank" rel="noopener">
+        <div class="fthumb" style="background:linear-gradient(135deg,rgba(131,58,180,.5),rgba(253,29,29,.3),rgba(252,176,69,.2));">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,210,140,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="rgba(255,210,140,.9)" stroke="none"/></svg>
+          <div class="fplay"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="fbody">
+          <div class="fplat"><div class="fdot" style="background:#c13584"></div>Instagram</div>
+          <div class="ftitle">Barsirin</div>
+          <div class="fsub">Reel</div>
+        </div>
+      </a>
+
+      <!-- Barsirin Post -->
+      <a class="fcard" href="https://www.instagram.com/p/CIvg6ZjjoOO/" target="_blank" rel="noopener">
+        <div class="fthumb" style="background:linear-gradient(135deg,rgba(131,58,180,.5),rgba(253,29,29,.3),rgba(252,176,69,.2));">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,210,140,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="rgba(255,210,140,.9)" stroke="none"/></svg>
+          <div class="fplay"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="fbody">
+          <div class="fplat"><div class="fdot" style="background:#c13584"></div>Instagram</div>
+          <div class="ftitle">Barsirin</div>
+          <div class="fsub">Post</div>
+        </div>
+      </a>
+
+      <!-- Kurdistan Reel -->
+      <a class="fcard" href="https://www.instagram.com/reel/C5gabNBI8Bx/" target="_blank" rel="noopener">
+        <div class="fthumb" style="background:linear-gradient(135deg,rgba(20,100,50,.55),rgba(200,160,20,.35));">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(200,240,160,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="rgba(200,240,160,.9)" stroke="none"/></svg>
+          <div class="fplay"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="fbody">
+          <div class="fplat"><div class="fdot" style="background:#c13584"></div>Instagram</div>
+          <div class="ftitle">Kurdistan</div>
+          <div class="fsub">Reel</div>
+        </div>
+      </a>
+
+      <!-- Interstellar Travel -->
+      <a class="fcard" href="https://www.instagram.com/reel/DAXwbgZqaBz/" target="_blank" rel="noopener">
+        <div class="fthumb" style="background:linear-gradient(135deg,rgba(5,10,50,.95),rgba(40,10,90,.7),rgba(0,40,110,.6));">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(160,200,255,.85)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(20 12 12)"/>
+            <circle cx="12" cy="12" r="2" fill="rgba(160,200,255,.85)" stroke="none"/>
+          </svg>
+          <div class="fplay"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="fbody">
+          <div class="fplat"><div class="fdot" style="background:#c13584"></div>Instagram</div>
+          <div class="ftitle">Interstellar Travel</div>
+          <div class="fsub">Reel</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <footer>© 2026 · Ismail Siriene</footer>
+
+</div>
+
+<script>
+  // Ripple on click
+  document.querySelectorAll('.link').forEach(el => {
+    el.addEventListener('click', function(e) {
+      const r = document.createElement('span');
+      r.className = 'rpl';
+      const rect = this.getBoundingClientRect();
+      const s = Math.max(rect.width, rect.height);
+      r.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX-rect.left-s/2}px;top:${e.clientY-rect.top-s/2}px;position:absolute;`;
+      this.appendChild(r);
+      setTimeout(() => r.remove(), 700);
+    });
+  });
+
+  // Inspirational movable ball
+  const inspoBall = document.createElement('div');
+  inspoBall.id = 'inspo-ball';
+  document.body.appendChild(inspoBall);
+  
+  // SVG canvas for slingshot bands
+  const svgCanvas = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svgCanvas.id = 'slingshot-canvas';
+  svgCanvas.setAttribute('width', window.innerWidth);
+  svgCanvas.setAttribute('height', window.innerHeight);
+  document.body.appendChild(svgCanvas);
+  
+  // start at upper right
+  let curX = window.innerWidth - 80;
+  let curY = 80;
+  inspoBall.style.top = curY + 'px';
+  inspoBall.style.left = curX + 'px';
+  inspoBall.style.transform = 'translate(-50%, -50%)';
+
+  let clickCount = 0;
+  const msg = document.createElement('div');
+  msg.id = 'inspo-msg';
+  msg.style.position = 'fixed';
+  msg.style.padding = '4px 8px';
+  msg.style.background = 'rgba(0,0,0,0.6)';
+  msg.style.color = '#ffe';
+  msg.style.fontSize = '0.75rem';
+  msg.style.borderRadius = '6px';
+  msg.style.pointerEvents = 'none';
+  msg.style.opacity = '0';
+  msg.style.transition = 'opacity 0.3s';
+  msg.textContent = 'Stop playing with me!';
+  document.body.appendChild(msg);
+
+  document.addEventListener('click', e => {
+    const targetX = e.clientX;
+    const targetY = e.clientY;
+    
+    // anchor point is the ball's current resting position
+    const anchorX = curX;
+    const anchorY = curY;
+    
+    // direction from ball to click point
+    const dx = targetX - curX;
+    const dy = targetY - curY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const angle = Math.atan2(dy, dx);
+    
+    // pull-back direction: opposite of where we're going
+    const pullBackDistance = 120;
+    const pullBackX = curX - Math.cos(angle) * pullBackDistance;
+    const pullBackY = curY - Math.sin(angle) * pullBackDistance;
+
+    // create two elastic bands (paths)
+    const band1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const band2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    
+    band1.setAttribute('stroke', '#e8b96a');
+    band1.setAttribute('stroke-width', '2.5');
+    band1.setAttribute('fill', 'none');
+    band1.setAttribute('stroke-linecap', 'round');
+    band1.setAttribute('opacity', '0.8');
+    
+    band2.setAttribute('stroke', '#e8b96a');
+    band2.setAttribute('stroke-width', '2.5');
+    band2.setAttribute('fill', 'none');
+    band2.setAttribute('stroke-linecap', 'round');
+    band2.setAttribute('opacity', '0.8');
+    
+    svgCanvas.appendChild(band1);
+    svgCanvas.appendChild(band2);
+
+    // phase 1: pull back with tension building
+    let pullBackPhase = 0;
+    const pullInterval = setInterval(() => {
+      pullBackPhase += 0.08;
+      
+      // ease out: smooth approach to max pull-back
+      const pullProgress = Math.min(1, pullBackPhase);
+      const easedPull = 1 - Math.pow(1 - pullProgress, 3);
+      
+      // current ball position (pulled back)
+      const ballX = curX + (pullBackX - curX) * easedPull;
+      const ballY = curY + (pullBackY - curY) * easedPull;
+      
+      // move ball visually during pull-back
+      inspoBall.style.top = ballY + 'px';
+      inspoBall.style.left = ballX + 'px';
+      
+      // calculate band curves with tension
+      const tensorPower = Math.sin(pullProgress * Math.PI) * 30;
+      
+      // band 1 (top): from anchor to top side of pulled-back ball
+      const midX1 = (anchorX + ballX) / 2;
+      const midY1 = (anchorY + ballY) / 2 - tensorPower;
+      const path1 = `M ${anchorX} ${anchorY - 12} Q ${midX1} ${midY1} ${ballX} ${ballY - 12}`;
+      band1.setAttribute('d', path1);
+      
+      // band 2 (bottom): from anchor to bottom side of pulled-back ball
+      const midY2 = (anchorY + ballY) / 2 + tensorPower;
+      const path2 = `M ${anchorX} ${anchorY + 12} Q ${midX1} ${midY2} ${ballX} ${ballY + 12}`;
+      band2.setAttribute('d', path2);
+      
+      if (pullBackPhase >= 1) {
+        clearInterval(pullInterval);
+        
+        // phase 2: release! snap bands and launch
+        setTimeout(() => {
+          band1.remove();
+          band2.remove();
+          
+          // launch ball to target with explosive speed
+          curX = targetX;
+          curY = targetY;
+          inspoBall.style.transition = 'top 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), left 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+          inspoBall.style.top = curY + 'px';
+          inspoBall.style.left = curX + 'px';
+          
+          // bounce on impact
+          setTimeout(() => {
+            const bounceOffsetX = Math.cos(angle) * 12;
+            const bounceOffsetY = Math.sin(angle) * 12;
+            inspoBall.style.transition = 'top 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55), left 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            inspoBall.style.top = (curY - bounceOffsetY) + 'px';
+            inspoBall.style.left = (curX - bounceOffsetX) + 'px';
+            
+            // settle
+            setTimeout(() => {
+              inspoBall.style.transition = 'top 0.12s ease-out, left 0.12s ease-out';
+              inspoBall.style.top = curY + 'px';
+              inspoBall.style.left = curX + 'px';
+            }, 150);
+          }, 200);
+        }, 80);
+      }
+    }, 30);
+
+    clickCount += 1;
+    if (clickCount > 5) {
+      msg.style.left = (targetX + 35) + 'px';
+      msg.style.top = (targetY - 20) + 'px';
+      msg.style.opacity = '1';
+      setTimeout(() => { msg.style.opacity = '0'; }, 2000);
+    }
+  });
+</script>
+</body>
+</html>
