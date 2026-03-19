@@ -299,6 +299,8 @@ h1 em { font-style: italic; color: var(--accent2); }
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   opacity:0; animation: rise .8s ease forwards;
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 .feat-row::-webkit-scrollbar { height: 3px; }
 .feat-row::-webkit-scrollbar-track { background: transparent; }
@@ -891,17 +893,22 @@ footer {
       e.preventDefault();
       currentFcardIndex = index;
       card.focus();
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     });
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
       currentFcardIndex = currentFcardIndex <= 0 ? fcards.length - 1 : currentFcardIndex - 1;
-      fcards[currentFcardIndex].focus();
+      const card = fcards[currentFcardIndex];
+      card.focus();
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     } else if (e.key === 'ArrowRight') {
       e.preventDefault();
       currentFcardIndex = (currentFcardIndex + 1) % fcards.length;
-      fcards[currentFcardIndex].focus();
+      const card = fcards[currentFcardIndex];
+      card.focus();
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     } else if (e.key === 'Enter' && currentFcardIndex >= 0) {
       window.open(fcards[currentFcardIndex].href, '_blank');
     }
