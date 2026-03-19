@@ -203,6 +203,9 @@ h1 em { font-style: italic; color: var(--accent2); }
 .link:hover { border-color: var(--border-h); transform: translateX(5px); box-shadow: -4px 0 24px rgba(200,133,58,.15), 0 4px 30px rgba(0,0,0,.4); }
 .link:hover::before { opacity:1; top:12%; bottom:12%; }
 .link:hover::after  { opacity:1; }
+.link:focus { border-color: var(--border-h); transform: translateX(5px); box-shadow: -4px 0 24px rgba(200,133,58,.15), 0 4px 30px rgba(0,0,0,.4); }
+.link:focus::before { opacity:1; top:12%; bottom:12%; }
+.link:focus::after  { opacity:1; }
 .link:active { transform: translateX(2px) scale(.99); }
 
 /* ── ICON CONTAINERS ── */
@@ -217,6 +220,12 @@ h1 em { font-style: italic; color: var(--accent2); }
   box-shadow: 0 2px 10px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,220,120,.08);
 }
 .link:hover .ico {
+  transform: scale(1.1) rotate(-3deg);
+  box-shadow: 0 4px 18px rgba(200,133,58,.25), inset 0 1px 0 rgba(255,220,120,.12);
+  border-color: rgba(212,147,58,0.45);
+  background: linear-gradient(135deg, rgba(212,147,58,0.22), rgba(180,110,20,0.14));
+}
+.link:focus .ico {
   transform: scale(1.1) rotate(-3deg);
   box-shadow: 0 4px 18px rgba(200,133,58,.25), inset 0 1px 0 rgba(255,220,120,.12);
   border-color: rgba(212,147,58,0.45);
@@ -248,6 +257,22 @@ h1 em { font-style: italic; color: var(--accent2); }
 .link:hover .ico-wa,
 .link:hover .ico-mail,
 .link:hover .ico-phone {
+  background: var(--ico-brand);
+  border-color: var(--ico-border);
+  box-shadow: 0 4px 18px var(--ico-brand), inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.link:focus .ico-ig,
+.link:focus .ico-x,
+.link:focus .ico-fb,
+.link:focus .ico-yt,
+.link:focus .ico-li,
+.link:focus .ico-pin,
+.link:focus .ico-snap,
+.link:focus .ico-tg,
+.link:focus .ico-wa,
+.link:focus .ico-mail,
+.link:focus .ico-phone {
   background: var(--ico-brand);
   border-color: var(--ico-border);
   box-shadow: 0 4px 18px var(--ico-brand), inset 0 1px 0 rgba(255,255,255,.06);
@@ -295,6 +320,12 @@ h1 em { font-style: italic; color: var(--accent2); }
   box-shadow: 0 16px 40px rgba(0,0,0,.5), 0 0 24px rgba(212,147,58,.1);
 }
 
+.fcard:focus {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--border-h);
+  box-shadow: 0 16px 40px rgba(0,0,0,.5), 0 0 24px rgba(212,147,58,.1);
+}
+
 .fthumb {
   width:100%; height:108px;
   display:flex; align-items:center; justify-content:center;
@@ -309,6 +340,7 @@ h1 em { font-style: italic; color: var(--accent2); }
   opacity:0; transition: opacity .3s;
 }
 .fcard:hover .fplay { opacity:1; }
+.fcard:focus .fplay { opacity:1; }
 .fplay svg { width:34px; height:34px; filter:drop-shadow(0 2px 10px rgba(0,0,0,.7)); }
 
 .fbody { padding: 10px 12px 12px; }
@@ -833,6 +865,45 @@ footer {
       msg.style.top = (targetY - 20) + 'px';
       msg.style.opacity = '1';
       setTimeout(() => { msg.style.opacity = '0'; }, 2000);
+    }
+  });
+
+  // Keyboard navigation for links
+  const links = document.querySelectorAll('.link');
+  let currentFocusIndex = -1;
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      currentFocusIndex = (currentFocusIndex + 1) % links.length;
+      links[currentFocusIndex].focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      currentFocusIndex = currentFocusIndex <= 0 ? links.length - 1 : currentFocusIndex - 1;
+      links[currentFocusIndex].focus();
+    }
+  });
+
+  // Keyboard navigation for featured cards
+  const fcards = document.querySelectorAll('.fcard');
+  let currentFcardIndex = -1;
+  fcards.forEach((card, index) => {
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      currentFcardIndex = index;
+      card.focus();
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      currentFcardIndex = currentFcardIndex <= 0 ? fcards.length - 1 : currentFcardIndex - 1;
+      fcards[currentFcardIndex].focus();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      currentFcardIndex = (currentFcardIndex + 1) % fcards.length;
+      fcards[currentFcardIndex].focus();
+    } else if (e.key === 'Enter' && currentFcardIndex >= 0) {
+      window.open(fcards[currentFcardIndex].href, '_blank');
     }
   });
 </script>
