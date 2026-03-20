@@ -759,6 +759,11 @@ footer {
   document.body.appendChild(msg);
 
   document.addEventListener('click', e => {
+    // Disable ball animation in social links, contacts, and featured sections
+    if (e.target.closest('.link') || e.target.closest('.fcard') || e.target.closest('svg')) {
+      return;
+    }
+
     const targetX = e.clientX;
     const targetY = e.clientY;
     
